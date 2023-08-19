@@ -20,6 +20,7 @@ sealed class DanmakuDriver : MonoBehaviour
     [SerializeField] Material _material = null;
     [SerializeField] float _bulletSize = 0.02f;
     [SerializeField] UnityEngine.UI.Text _uiText = null;
+    [SerializeField] int targetBulletCount = 100000;
 
     #endregion
 
@@ -84,7 +85,7 @@ sealed class DanmakuDriver : MonoBehaviour
         var dt = 1.0f / 60;
         var aspect = (float)Screen.width / Screen.height;
         var pos = math.float3(transform.position).xy;
-        var spawn = Time.deltaTime < 1.0f / 58 ? 400 : 20;
+        var spawn = Mathf.Min(Mathf.Max(targetBulletCount- ActiveBulletCount, 0), targetBulletCount);
 
         // Bullet update job chain
         var handle = new BulletUpdateJob(_bullets, dt).Schedule(ActiveBulletCount, 64);
