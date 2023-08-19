@@ -3,6 +3,7 @@ using UnityEngine.Rendering;
 using Unity.Collections;
 using Unity.Jobs;
 using Unity.Mathematics;
+using System.Linq;
 
 namespace Danmaku {
 
@@ -36,6 +37,9 @@ sealed class DanmakuDriver : MonoBehaviour
 
     // Mesh object for rendering bullets
     Mesh _mesh;
+
+    float[] fpsValues = new float[100];
+    int fpsValueI = 0;
 
     #endregion
 
@@ -74,6 +78,9 @@ sealed class DanmakuDriver : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Space))
+            _methodType = _methodType == MethodType.Simple ? MethodType.Advanced : MethodType.Simple;
+
         var dt = 1.0f / 60;
         var aspect = (float)Screen.width / Screen.height;
         var pos = math.float3(transform.position).xy;
@@ -94,8 +101,12 @@ sealed class DanmakuDriver : MonoBehaviour
         // Draw call
         Graphics.DrawMesh(_mesh, Vector3.zero, Quaternion.identity, _material, 0);
 
+        float fps = 1f / Mathf.Max(0.01f, Time.deltaTime);
+        fpsValues[fpsValueI] = fps;
+        fpsValueI = (fpsValueI + 1) % fpsValues.Length;
+
         // UI update
-        _uiText.text = $"{ActiveBulletCount:n0} bullets";
+        _uiText.text = $"{ActiveBulletCount:n0} bullets\n{fpsValues.Average():F2} fps\n{_methodType.ToString()}\nPress SPACE to toggle mode";
     }
 
     #endregion
