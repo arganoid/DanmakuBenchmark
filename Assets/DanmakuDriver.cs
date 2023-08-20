@@ -102,7 +102,7 @@ sealed class DanmakuDriver : MonoBehaviour
         // Draw call
         Graphics.DrawMesh(_mesh, Vector3.zero, Quaternion.identity, _material, 0);
 
-        float fps = 1f / Mathf.Max(0.01f, Time.deltaTime);
+        float fps = 1f / Mathf.Max(0.00001f, Time.deltaTime);
         fpsValues[fpsValueI] = fps;
         fpsValueI = (fpsValueI + 1) % fpsValues.Length;
 
